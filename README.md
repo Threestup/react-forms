@@ -13,7 +13,7 @@ yarn add tsp-react-forms
 ## Basic Usage
 
 ```typescript
-import { Form, ElementType, configureButton, configureInput, IInput } from "tsp-react-forms";
+import { Form, ElementType, configureButton, configureInput, IInput } from 'tsp-react-forms'
 
 export interface SignInFormSerialized {
     email:string;
@@ -62,7 +62,9 @@ export default SignInForm;
 ```
 
 ```typescript
+import * as React from 'react'
 import { Input } from 'tsp-react-forms'
+import SignInForm from './Form'
 
 class SignInView extends React.Component<{}, {}> {
     form = new SignInForm(this.onSubmit.bind(this), this.setState.bind(this))
