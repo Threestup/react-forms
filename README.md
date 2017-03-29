@@ -90,8 +90,7 @@ class SignInView extends React.Component<{}, {}> {
                 <Input config={EmailInput}/>
                 <Input config={PasswordInput}/>
 
-                <button className={SignInButtonClassName}
-                        disabled={!this.form.isValid}
+                <button disabled={!this.form.isValid}
                         onClick={SignInButton.onClick}>
                     {SignInButton.text}
                 </button>
