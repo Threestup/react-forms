@@ -1,6 +1,6 @@
 # Advanced React Forms
 
-[![CircleCI](https://circleci.com/gh/Threestup/monads.svg?style=svg)](https://circleci.com/gh/Threestup/react-forms)
+[![CircleCI](https://circleci.com/gh/Threestup/react-forms.svg?style=svg)](https://circleci.com/gh/Threestup/react-forms)
 
 **NOTE:** Only works with TypeScript 2.1+. Enabling `strictNullChecks` is strongly recommended.
 
