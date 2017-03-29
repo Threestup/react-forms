@@ -3,7 +3,7 @@ import * as React from 'react';
 import { IToggle } from '../.';
 import { appendToWrapperClass, Update } from '../../Utils';
 
-interface IProps {
+export interface IProps {
     config:IToggle;
 }
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ISelect, IOption } from '../.';
 import { appendToWrapperClass, Update } from '../../Utils';
 
-interface IProps {
+export interface IProps {
     config:ISelect;
 }
 

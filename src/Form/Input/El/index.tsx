@@ -4,7 +4,7 @@ import { IInput } from '../.';
 import { Form } from '../../.';
 import { appendToWrapperClass, Update } from '../../Utils';
 
-interface IProps {
+export interface IProps {
     config:IInput;
 }
 
