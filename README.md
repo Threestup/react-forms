@@ -97,4 +97,6 @@ class SignInView extends React.Component<{}, {}> {
         );
     }
 }
+
+export default SignInView;
 ```
