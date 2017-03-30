@@ -1,5 +1,4 @@
 import { and, equals, filter, find, findIndex, gte, update } from 'ramda';
-import * as shortid from 'shortid';
 import { Option, Some, Result, Ok, Err } from 'tsp-monads';
 import { IButton, configureButton } from './Button';
 import { IInput, configureInput, IInputPartial } from './Input';
@@ -45,8 +44,8 @@ export class Form {
         return Object.assign({}, input, updateConfig);
     }
 
-    reRender():this {
-        this.setState({_: shortid.generate()});
+    updateState():this {
+        this.setState({form: this});
         return this;
     }
 
@@ -91,7 +90,7 @@ export class Form {
         return this
             .validateInputs()
             .validateForm()
-            .reRender();
+            .updateState();
     }
 
     updateValueIn(n:string, v:string|string[]|ToggleValue, type:ElementType):this {
@@ -153,7 +152,7 @@ export class Form {
         if (this.isValid)
             cb();
         else
-            this.reRender();
+            this.updateState();
     }
 
     getButtonByName(n:string):IButton {

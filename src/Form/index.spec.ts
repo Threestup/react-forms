@@ -2,7 +2,6 @@ import 'jsdom-global/register';
 
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import * as shortid from 'shortid';
 import { Some, Ok, Err, _Ok, _Err } from 'tsp-monads';
 import { Form, ElementType } from '../';
 import { configureButton } from './Button';
@@ -86,15 +85,15 @@ describe('Form', () => {
         });
     });
 
-    describe('reRender', () => {
+    describe('updateState', () => {
         it('correctly calls the method passed into instance constructor', () => {
             let newState:any   = null;
             const fakeSetState = (nS:any) => newState = nS;
 
             const form = new Form(fakeSetState);
-            form.reRender();
+            form.updateState();
 
-            expect(shortid.isValid(newState._)).to.equal(true);
+            expect(newState.form).to.deep.equal(form);
         });
     });
 
@@ -172,10 +171,10 @@ describe('Form', () => {
 
     describe('updateElement', () => {
         describe('Input', () => {
-            it('returns instance of Form with an updated input at correct index, calls validateInputs(), validateForm(), and reRender()', () => {
+            it('returns instance of Form with an updated input at correct index, calls validateInputs(), validateForm(), and updateState()', () => {
                 const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
                 const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-                const reRender       = sandbox.spy(Form.prototype, 'reRender');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
                 const getIndexByName = sandbox
                     .stub(Form.prototype, 'getIndexByName')
@@ -195,10 +194,10 @@ describe('Form', () => {
                 expect(reRender.calledOnce).to.equal(true);
             });
 
-            it('returns instance of Form with untouched inputs, calls validateInputs(), validateForm(), and reRender()', () => {
+            it('returns instance of Form with untouched inputs, calls validateInputs(), validateForm(), and updateState()', () => {
                 const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
                 const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-                const reRender       = sandbox.spy(Form.prototype, 'reRender');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
                 sandbox
                     .stub(Form.prototype, 'getIndexByName')
@@ -220,10 +219,10 @@ describe('Form', () => {
         });
 
         describe('Select', () => {
-            it('returns instance of Form with an updated select at correct index, calls validateInputs(), validateForm(), and reRender()', () => {
+            it('returns instance of Form with an updated select at correct index, calls validateInputs(), validateForm(), and updateState()', () => {
                 const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
                 const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-                const reRender       = sandbox.spy(Form.prototype, 'reRender');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
                 const getIndexByName = sandbox
                     .stub(Form.prototype, 'getIndexByName')
@@ -243,10 +242,10 @@ describe('Form', () => {
                 expect(reRender.calledOnce).to.equal(true);
             });
 
-            it('returns instance of Form with untouched selects, calls validateInputs(), validateForm(), and reRender()', () => {
+            it('returns instance of Form with untouched selects, calls validateInputs(), validateForm(), and updateState()', () => {
                 const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
                 const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-                const reRender       = sandbox.spy(Form.prototype, 'reRender');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
                 sandbox
                     .stub(Form.prototype, 'getIndexByName')
@@ -268,10 +267,10 @@ describe('Form', () => {
         });
 
         describe('Toggle', () => {
-            it('returns instance of Form with an updated toggle at correct index, calls validateInputs(), validateForm(), and reRender()', () => {
+            it('returns instance of Form with an updated toggle at correct index, calls validateInputs(), validateForm(), and updateState()', () => {
                 const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
                 const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-                const reRender       = sandbox.spy(Form.prototype, 'reRender');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
                 const getIndexByName = sandbox
                     .stub(Form.prototype, 'getIndexByName')
@@ -291,10 +290,10 @@ describe('Form', () => {
                 expect(reRender.calledOnce).to.equal(true);
             });
 
-            it('returns instance of Form with untouched toggles, calls validateInputs(), validateForm(), and reRender()', () => {
+            it('returns instance of Form with untouched toggles, calls validateInputs(), validateForm(), and updateState()', () => {
                 const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
                 const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-                const reRender       = sandbox.spy(Form.prototype, 'reRender');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
                 sandbox
                     .stub(Form.prototype, 'getIndexByName')
@@ -589,7 +588,7 @@ describe('Form', () => {
         it('calls validateInputs(), validateForm(), and callback() when valid', () => {
             const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
             const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-            const reRender       = sandbox.spy(Form.prototype, 'reRender');
+            const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
             let form = new Form();
             form.inputs.push(configureInput());
@@ -604,13 +603,13 @@ describe('Form', () => {
             expect(callbackCalled).to.equal(true);
         });
 
-        it('calls validateInputs(), validateForm(), and reRender() when invalid', () => {
+        it('calls validateInputs(), validateForm(), and updateState() when invalid', () => {
             sandbox.stub(Validate, 'passesValidation')
                    .returns({errors: ['1'], isValid: false} as Validate.IValidation);
 
             const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
             const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
-            const reRender       = sandbox.spy(Form.prototype, 'reRender');
+            const reRender       = sandbox.spy(Form.prototype, 'updateState');
 
             let form = new Form();
             form.inputs.push(configureInput());
