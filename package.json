@@ -1,6 +1,6 @@
 {
   "name": "tsp-react-forms",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Advanced React Forms; TypeScript first",
   "keywords": [
     "react",
@@ -8,7 +8,9 @@
     "type",
     "threestup"
   ],
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "repository": {
