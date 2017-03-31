@@ -20,10 +20,10 @@ export class InputComponent extends React.Component<IProps, IState> {
         return (active || (!active && !valEmpty)) ? 'active' : '';
     }
 
-    static getInputClass(isValid:boolean, touched:boolean, valEmpty:boolean):string {
+    static getInputClass(isValid:boolean, touched:boolean):string {
         let className = '';
 
-        if (touched && !valEmpty)
+        if (touched)
             className = isValid ? 'valid' : 'invalid';
 
         return className;
@@ -105,13 +105,13 @@ export class InputComponent extends React.Component<IProps, IState> {
         const {type, name, placeholder, disabled} = this.props.config;
 
         return equals(type, 'textarea') ? (
-                <textarea className={InputComponent.getInputClass(isValid, touched, equals(value.length, 0))}
+                <textarea className={InputComponent.getInputClass(isValid, touched)}
                           value={value} placeholder={placeholder} disabled={disabled} name={name}
                           onFocus={() => this.handleFocus()}
                           onBlur={() => this.handleBlur()}
                           onChange={this.setValue.bind(this)}/>
             ) : (
-                <input className={InputComponent.getInputClass(isValid, touched, equals(value.length, 0))}
+                <input className={InputComponent.getInputClass(isValid, touched)}
                        type={type} value={value} placeholder={placeholder} disabled={disabled} name={name}
                        onFocus={() => this.handleFocus()}
                        onBlur={() => this.handleBlur()}

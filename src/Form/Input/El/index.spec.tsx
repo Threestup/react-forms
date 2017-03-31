@@ -45,33 +45,23 @@ describe('Input/El', () => {
     });
 
     describe('getInputClass', () => {
-        it('returns "valid" when isValid is true and touched is true and isEmpty is false', () => {
-            const subject = InputComponent.getInputClass(true, true, false);
+        it('returns "valid" when isValid is true and touched is true', () => {
+            const subject = InputComponent.getInputClass(true, true);
             expect(subject).to.equal('valid');
         });
 
-        it('returns "" when isValid is true and touched is true and isEmpty is true', () => {
-            const subject = InputComponent.getInputClass(true, true, true);
-            expect(subject).to.equal('');
-        });
-
-        it('returns "invalid" when isValid is false and touched is true and isEmpty is false', () => {
-            const subject = InputComponent.getInputClass(false, true, false);
+        it('returns "invalid" when isValid is false and touched is true', () => {
+            const subject = InputComponent.getInputClass(false, true);
             expect(subject).to.equal('invalid');
         });
 
-        it('returns "" when isValid is false and touched is true and isEmpty is true', () => {
-            const subject = InputComponent.getInputClass(false, true, true);
+        it('returns "" when isValid is true and touched is false', () => {
+            const subject = InputComponent.getInputClass(true, false);
             expect(subject).to.equal('');
         });
 
-        it('returns "" when isValid is true and touched is false, regardless of isEmpty', () => {
-            const subject = InputComponent.getInputClass(true, false, true);
-            expect(subject).to.equal('');
-        });
-
-        it('returns "" when isValid is false and touched is false, regardless of isEmpty', () => {
-            const subject = InputComponent.getInputClass(false, false, true);
+        it('returns "" when isValid is false and touched is false', () => {
+            const subject = InputComponent.getInputClass(false, false);
             expect(subject).to.equal('');
         });
     });
@@ -400,7 +390,7 @@ describe('Input/El', () => {
                 const getInputClass = sandbox.spy(InputComponent, 'getInputClass');
                 const config        = configureInput({isValid: false, touched: true});
                 mountComponent(config);
-                expect(getInputClass.calledWith(false, true, true))
+                expect(getInputClass.calledWith(false, true))
                     .to.equal(true);
             });
 
@@ -476,7 +466,7 @@ describe('Input/El', () => {
                 const getInputClass = sandbox.spy(InputComponent, 'getInputClass');
                 const config        = configureInput({type: 'textarea', isValid: true, value: 'Not Empty'});
                 mountComponent(config);
-                expect(getInputClass.calledWith(true, false, false))
+                expect(getInputClass.calledWith(true, false))
                     .to.equal(true);
             });
 
