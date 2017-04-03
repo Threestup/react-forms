@@ -11,6 +11,10 @@ export type FormUpdateEvent<T> = (newElement:T) => void;
 
 export enum ElementType {Unknown = 1, Input, Select, Button, Toggle}
 
+export interface ISerializedValues<T> {
+    [k:string]:T;
+}
+
 export class Form {
     buttons:IButton[];
     inputs:IInput[];
@@ -153,6 +157,18 @@ export class Form {
             cb();
         else
             this.updateState();
+    }
+
+    serializeInputs():ISerializedValues<string> {
+        let o:ISerializedValues<string> = {};
+        this.inputs.forEach(_ => o[_.name] = _.value);
+        return o;
+    }
+
+    serializeSelects():ISerializedValues<string|string[]> {
+        let o:ISerializedValues<string|string[]> = {};
+        this.selects.forEach(_ => o[_.name] = _.value);
+        return o;
     }
 
     getButtonByName(n:string):IButton {

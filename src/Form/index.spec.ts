@@ -625,6 +625,46 @@ describe('Form', () => {
         });
     });
 
+    describe('serializeInputs', () => {
+        it('correctly serializes inputs', () => {
+            let form = new Form();
+            form.inputs.push(configureInput({name: 'a', value: '1'}));
+            form.inputs.push(configureInput({name: 'b', value: '2'}));
+
+            const subject = form.serializeInputs();
+
+            expect(subject).to.deep.equal({
+                a: '1', b: '2'
+            });
+        });
+
+        it('returns empty object if no inputs present', () => {
+            let form      = new Form();
+            const subject = form.serializeInputs();
+            expect(subject).to.deep.equal({});
+        });
+    });
+
+    describe('serializeSelects', () => {
+        it('correctly serializes selects', () => {
+            let form = new Form();
+            form.selects.push(configureSelect({name: 'a', value: '1'}));
+            form.selects.push(configureSelect({name: 'b', value: ['2', '3']}));
+
+            const subject = form.serializeSelects();
+
+            expect(subject).to.deep.equal({
+                a: '1', b: ['2', '3']
+            });
+        });
+
+        it('returns empty object if no selects present', () => {
+            let form      = new Form();
+            const subject = form.serializeSelects();
+            expect(subject).to.deep.equal({});
+        });
+    });
+
     describe('getButtonByName', () => {
         it('correctly returns a IButton getConfig if found by name', () => {
             const button = configureButton({name: 'Test', className: 'test', text: 'Test Text'});
