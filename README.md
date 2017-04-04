@@ -1,6 +1,7 @@
 # Advanced React Forms
 
 [![CircleCI](https://circleci.com/gh/Threestup/react-forms.svg?style=svg)](https://circleci.com/gh/Threestup/react-forms)
+[![npm version](https://badge.fury.io/js/tsp-react-forms.svg)](https://badge.fury.io/js/tsp-react-forms)
 
 **NOTE:** Only works with TypeScript 2.1+. Enabling `strictNullChecks` is strongly recommended.
 
