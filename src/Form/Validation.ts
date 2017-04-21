@@ -61,8 +61,13 @@ export const passesValidation = (value:string, rules:string[]):IValidation => {
             }
         };
 
-        if (contains('required', rules) || gt(value.length, 0))
-            forEach(runValidation, without(['required'], rules));
+        if (equals(value.length, 0) && contains('required', rules)) {
+          forEach(runValidation, without(['required'], rules));
+          result.errors.push('required');
+        }
+
+        if (gt(value.length, 0))
+          forEach(runValidation, without(['required'], rules));
 
         result.isValid = equals(result.errors.length, 0);
     }
