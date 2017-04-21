@@ -58,7 +58,44 @@ describe('Validation', () => {
             const testCases:TestCases = [
                 {value: 'test@a', rules: ['isEmail'], passes: {isValid: false, errors: ['isEmail']}},
                 {value: 'test@a.b', rules: ['isEmail'], passes: {isValid: false, errors: ['isEmail']}},
-                {value: 'test@jobheron.com', rules: ['isEmail'], passes: {isValid: true, errors: []}}
+                {value: 'test@website.com', rules: ['isEmail'], passes: {isValid: true, errors: []}}
+            ];
+
+            const functor = (testCase:ITestCase) => {
+                it('should correctly evaluate ' + testCase.value + ' => ' + testCase.rules + ' to ' + testCase.passes, () => {
+                    if (testCase.throws)
+                        expect(() => passesValidation(testCase.value, testCase.rules)).to.throw();
+                    else
+                        expect(passesValidation(testCase.value, testCase.rules)).to.deep.equal(testCase.passes);
+                });
+            };
+
+            forEach(functor, testCases);
+        });
+
+        describe('isEmail, required', () => {
+            const testCases:TestCases = [
+                {value: 'test@a.b', rules: ['isEmail', 'required'], passes: {isValid: false, errors: ['isEmail']}},
+                {value: '', rules: ['isEmail', 'required'], passes: {isValid: false, errors: ['isEmail', 'required']}},
+                {value: 'test@website.com', rules: ['isEmail', 'required'], passes: {isValid: true, errors: []}}
+            ];
+
+            const functor = (testCase:ITestCase) => {
+                it('should correctly evaluate ' + testCase.value + ' => ' + testCase.rules + ' to ' + testCase.passes, () => {
+                    if (testCase.throws)
+                        expect(() => passesValidation(testCase.value, testCase.rules)).to.throw();
+                    else
+                        expect(passesValidation(testCase.value, testCase.rules)).to.deep.equal(testCase.passes);
+                });
+            };
+
+            forEach(functor, testCases);
+        });
+
+        describe('required', () => {
+            const testCases:TestCases = [
+                {value: 'a', rules: ['required'], passes: {isValid: true, errors: []}},
+                {value: '', rules: ['required'], passes: {isValid: false, errors: ['required']}},
             ];
 
             const functor = (testCase:ITestCase) => {
@@ -76,12 +113,12 @@ describe('Validation', () => {
         describe('isURL', () => {
             const testCases:TestCases = [
                 {value: 'jobheron', rules: ['isURL'], passes: {isValid: false, errors: ['isURL']}},
-                {value: 'www.jobheron.com', rules: ['isURL'], passes: {isValid: true, errors: []}},
-                {value: 'www.jobheron.com/', rules: ['isURL'], passes: {isValid: true, errors: []}},
-                {value: 'jobheron.com', rules: ['isURL'], passes: {isValid: true, errors: []}},
-                {value: 'http://jobheron.com', rules: ['isURL'], passes: {isValid: true, errors: []}},
-                {value: 'http//jobheron.com', rules: ['isURL'], passes: {isValid: false, errors: ['isURL']}},
-                {value: 'https://jobheron.com', rules: ['isURL'], passes: {isValid: true, errors: []}}
+                {value: 'www.website.com', rules: ['isURL'], passes: {isValid: true, errors: []}},
+                {value: 'www.website.com/', rules: ['isURL'], passes: {isValid: true, errors: []}},
+                {value: 'website.com', rules: ['isURL'], passes: {isValid: true, errors: []}},
+                {value: 'http://website.com', rules: ['isURL'], passes: {isValid: true, errors: []}},
+                {value: 'http//website.com', rules: ['isURL'], passes: {isValid: false, errors: ['isURL']}},
+                {value: 'https://website.com', rules: ['isURL'], passes: {isValid: true, errors: []}}
             ];
 
             const functor = (testCase:ITestCase) => {
