@@ -762,6 +762,35 @@ describe('Form', () => {
         });
     });
 
+    describe('getSelectsByNameMatch', () => {
+        it('correctly returns a list of ISelect configs matched by name', () => {
+            const select1 = configureSelect({name: 'Test', label: 'Test Label 1'});
+            const select2 = configureSelect({name: 'Test', label: 'Test Label 2'});
+
+            let form = new Form();
+            form.selects.push(select1);
+            form.selects.push(select2);
+
+            const subject = form.getSelectsByNameMatch('Test');
+
+            expect(subject).to.deep.equal([select1, select2]);
+        });
+
+        it('correctly returns an empty list if NOT matched by name', () => {
+            const select1 = configureSelect({name: 'Test_abc', label: 'Test Label 1'});
+            const select2 = configureSelect({name: 'Test_def', label: 'Test Label 2'});
+
+            let form = new Form();
+            form.selects.push(select1);
+            form.selects.push(select2);
+
+            const subject = form.getSelectsByNameMatch('TEST');
+
+            expect(subject).to.deep.equal([]);
+        });
+    });
+
+
     describe('getToggleByName', () => {
         it('correctly returns a IToggle getConfig if found by name', () => {
             const toggle = configureToggle({name: 'Test'});
