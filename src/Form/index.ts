@@ -190,6 +190,10 @@ export class Form {
             .unwrap_or(configureSelect({name: n}));
     }
 
+    getSelectsByNameMatch(n:string):ISelect[] {
+        return filter((i:ISelect) => new RegExp(n, 'g').test(i.name), this.selects);
+    }
+
     getToggleByName(n:string):IToggle {
         return Some(find((t:IToggle) => equals(t.name, n), this.toggles))
             .unwrap_or(configureToggle({name: n}));
