@@ -1,4 +1,4 @@
-# Advanced React Forms
+# Type safe React Forms
 
 [![CircleCI](https://circleci.com/gh/Threestup/react-forms.svg?style=svg)](https://circleci.com/gh/Threestup/react-forms)
 [![npm version](https://badge.fury.io/js/tsp-react-forms.svg)](https://badge.fury.io/js/tsp-react-forms)
