@@ -8,7 +8,7 @@ export interface IProps {
 }
 
 export const SelectComponent = (props:IProps) => {
-    const {name, label, multiple, options, value, onUpdate, disabled, wrapperClassName} = props.config;
+    const {name, label, multiple, options, defaultOptions, value, onUpdate, disabled, wrapperClassName} = props.config;
 
     const renderOption = (option:IOption, index:number) => {
         return (
@@ -40,6 +40,7 @@ export const SelectComponent = (props:IProps) => {
                     onChange={onChange}
                     defaultValue={value}
                     disabled={disabled}>
+                {defaultOptions.map(renderOption, defaultOptions)}
                 {options.map(renderOption, options)}
             </select>
         </div>

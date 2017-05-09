@@ -12,6 +12,7 @@ describe('Select', () => {
             expect(subject.name).to.equal('');
             expect(subject.onUpdate(configureSelect())).to.equal(null);
             expect(subject.options).to.deep.equal([]);
+            expect(subject.defaultOptions).to.deep.equal([]);
             expect(subject.value).to.equal('');
             expect(subject.wrapperClassName).to.equal('');
         });
@@ -29,6 +30,7 @@ describe('Select', () => {
                 name: 'New Name',
                 onUpdate,
                 options: [{value: 'A', label: 'Label for A'}],
+                defaultOptions: [{value: 'A', label: 'Label for A'}],
                 value: ['a', 'b'],
                 wrapperClassName: 'NewClassName',
             };
@@ -43,6 +45,7 @@ describe('Select', () => {
             expect(subject.name).to.equal(overrideConfig.name);
             expect(subject.onUpdate).to.equal(overrideConfig.onUpdate);
             expect(subject.options).to.deep.equal(overrideConfig.options);
+            expect(subject.defaultOptions).to.deep.equal(overrideConfig.defaultOptions);
             expect(subject.value).to.deep.equal(overrideConfig.value);
             expect(subject.wrapperClassName).to.deep.equal(overrideConfig.wrapperClassName);
 
