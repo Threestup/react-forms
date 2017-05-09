@@ -15,6 +15,7 @@ describe('Select', () => {
             expect(subject.defaultOptions).to.deep.equal([]);
             expect(subject.value).to.equal('');
             expect(subject.wrapperClassName).to.equal('');
+            expect(subject.selectData).to.equal(null);
         });
 
         it('returns correctly re-configured Select when override object', () => {
@@ -23,7 +24,7 @@ describe('Select', () => {
             const onUpdate = (nS:ISelect) => newSelection = nS;
 
             // Could use ISelectPartial but want to ensure we test replacing every getConfig key
-            const overrideConfig:ISelect = {
+            const overrideConfig:ISelect<number> = {
                 disabled: true,
                 label: 'New Label',
                 multiple: true,
@@ -33,6 +34,7 @@ describe('Select', () => {
                 defaultOptions: [{value: 'A', label: 'Label for A'}],
                 value: ['a', 'b'],
                 wrapperClassName: 'NewClassName',
+                selectData: 1
             };
 
             const subject = configureSelect(overrideConfig);
@@ -48,6 +50,7 @@ describe('Select', () => {
             expect(subject.defaultOptions).to.deep.equal(overrideConfig.defaultOptions);
             expect(subject.value).to.deep.equal(overrideConfig.value);
             expect(subject.wrapperClassName).to.deep.equal(overrideConfig.wrapperClassName);
+            expect(subject.selectData).to.deep.equal(overrideConfig.selectData);
 
             subject.onUpdate(updatedSelection);
             expect(newSelection).to.deep.equal(updatedSelection);

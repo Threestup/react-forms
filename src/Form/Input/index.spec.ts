@@ -71,6 +71,7 @@ describe('Input', () => {
             expect(subject.type).to.equal(overrideConfig.type);
             expect(subject.value).to.equal(overrideConfig.value);
             expect(subject.wrapperClassName).to.equal(overrideConfig.wrapperClassName);
+            expect(subject.inputData).to.equal(overrideConfig.inputData);
 
             subject.onUpdate(updatedInput);
             expect(newInput).to.deep.equal(updatedInput);
