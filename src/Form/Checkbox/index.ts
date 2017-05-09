@@ -7,7 +7,6 @@ export interface CheckboxValue {
 
 export interface ICheckbox {
     disabled:boolean;
-    label:string;
     name:string;
     onClick:FormUpdateEvent<ICheckbox>;
     selectedValues:string[];
@@ -19,7 +18,6 @@ export type ICheckboxPartial = Partial<ICheckbox>;
 
 const defaultCheckboxConfig:ICheckbox = {
     disabled: false,
-    label: '',
     name: '',
     onClick: (newCheckbox:ICheckbox) => null,
     selectedValues: [],

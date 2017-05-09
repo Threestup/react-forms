@@ -7,7 +7,6 @@ describe('Checkbox', () => {
             const subject = configureCheckbox();
 
             expect(subject.disabled).to.equal(false);
-            expect(subject.label).to.equal('');
             expect(subject.name).to.equal('');
             expect(subject.onClick(configureCheckbox())).to.equal(null);
             expect(subject.selectedValues).to.deep.equal([]);
@@ -23,7 +22,6 @@ describe('Checkbox', () => {
             // Could use ICheckboxPartial but want to ensure we test replacing every getConfig key
             const overrideConfig:ICheckbox = {
                 disabled: true,
-                label: 'New Label',
                 name: 'New Name',
                 onClick,
                 selectedValues: ['Other Value'],
@@ -36,7 +34,6 @@ describe('Checkbox', () => {
             const updatedCheckbox = configureCheckbox();
 
             expect(subject.disabled).to.equal(overrideConfig.disabled);
-            expect(subject.label).to.equal(overrideConfig.label);
             expect(subject.name).to.equal(overrideConfig.name);
             expect(subject.onClick).to.equal(overrideConfig.onClick);
             expect(subject.selectedValues).to.deep.equal(overrideConfig.selectedValues);

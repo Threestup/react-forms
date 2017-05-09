@@ -88,7 +88,6 @@ describe('Checkbox/El', () => {
 
                 const config = configureCheckbox({
                     disabled: true,
-                    label: '',
                     name: 'New Name',
                     onClick,
                     selectedValues: ['val1'],
