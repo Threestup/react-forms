@@ -12,6 +12,7 @@ export interface ISelect {
     name:string;
     onUpdate:FormUpdateEvent<ISelect>;
     options:IOption[];
+    defaultOptions:IOption[];
     value:string|string[];
     wrapperClassName:string;
 }
@@ -25,6 +26,7 @@ const defaultSelectConfig:ISelect = {
     name: '',
     onUpdate: (newSelect:ISelect) => null,
     options: [],
+    defaultOptions: [],
     value: '',
     wrapperClassName: '',
 };

@@ -58,6 +58,21 @@ describe('Select/El', () => {
             expect(subject.childAt(1).children().length).to.equal(optionsCount);
         });
 
+        it('should correctly render the component with a default value', () => {
+            const optionsCount = 1;
+
+            const options  = getOptions(optionsCount);
+            const defaultOptions  = [{value: 'IAmATest', label: 'Please Select'}]
+            const newProps = configureSelect({name: 'Select', label: 'Test Label', options, defaultOptions, value: defaultOptions[0].value});
+
+            const subject = renderComponent(newProps).find('div');
+
+            expect(subject.childAt(1).props().defaultValue).to.equal(newProps.value);
+            expect(subject.childAt(1).children().length).to.equal(optionsCount + defaultOptions.length);
+            expect(subject.childAt(1).children().first().props().children).to.equal(defaultOptions[0].label);
+            expect(subject.childAt(1).children().at(1).props().children).to.equal(options[0].label);
+        });
+
         describe('Wrapper', () => {
             it('calls appendToWrapperClass() with correct parameters', () => {
                 const appendToWrapperClass = sandbox.spy(FormUtils, 'appendToWrapperClass');
