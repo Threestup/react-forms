@@ -22,6 +22,7 @@ describe('Input', () => {
             expect(subject.type).to.equal('text');
             expect(subject.value).to.equal('');
             expect(subject.wrapperClassName).to.equal('');
+            expect(subject.inputData).to.equal(null);
         });
 
         it('returns correctly re-configured Input when override object', () => {
@@ -30,7 +31,7 @@ describe('Input', () => {
             const onUpdate = (nI:IInput) => newInput = nI;
 
             // Could use IInputPartial but want to ensure we test replacing every getConfig key
-            const overrideConfig:IInput = {
+            const overrideConfig:IInput<number> = {
                 contextRules: [(v:string) => true],
                 contextErrors: ['0'],
                 contextErrorMessage: 'New Context Error Message',
@@ -47,6 +48,7 @@ describe('Input', () => {
                 type: 'email',
                 value: 'New Value',
                 wrapperClassName: 'NewClassName',
+                inputData: 1
             };
 
             const subject = configureInput(overrideConfig);

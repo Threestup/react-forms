@@ -3,7 +3,7 @@ import { FormUpdateEvent } from '../.';
 export type ContextRule = (value:string) => boolean;
 export type InputType = 'text' | 'email' | 'password' | 'date' | 'time' | 'textarea';
 
-export interface IInput {
+export interface IInput<T = any> {
     contextRules:ContextRule[];
     contextErrors:string[];
     contextErrorMessage:string;
@@ -20,9 +20,10 @@ export interface IInput {
     type:InputType;
     value:string;
     wrapperClassName:string;
+    inputData:T;
 }
 
-export type IInputPartial = Partial<IInput>;
+export type IInputPartial<T = any> = Partial<IInput<T>>;
 
 const defaultInputConfig:IInput = {
     contextRules: [],
@@ -41,9 +42,10 @@ const defaultInputConfig:IInput = {
     type: 'text',
     value: '',
     wrapperClassName: '',
+    inputData: null
 };
 
-export const configureInput = (override:IInputPartial = {}):IInput => {
+export function configureInput<T = any>(override:IInputPartial<T> = {}):IInput<T> {
     return Object.assign({}, defaultInputConfig, override);
 };
 
