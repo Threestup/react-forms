@@ -1,6 +1,7 @@
 import { and, equals, filter, find, findIndex, gte, update } from 'ramda';
 import { Option, Some, Result, Ok, Err } from 'tsp-monads';
 import { IButton, configureButton } from './Button';
+import { CheckboxValue, configureCheckbox, ICheckbox } from './Checkbox';
 import { IInput, configureInput, IInputPartial } from './Input';
 import { ISelect, configureSelect } from './Select';
 import { IToggle, configureToggle, ToggleValue } from './Toggle';
@@ -9,7 +10,7 @@ import { Update } from './Utils';
 
 export type FormUpdateEvent<T> = (newElement:T) => void;
 
-export enum ElementType {Unknown = 1, Input, Select, Button, Toggle}
+export enum ElementType {Unknown = 1, Input, Select, Button, Toggle, Checkbox}
 
 export interface ISerializedValues<T> {
     [k:string]:T;
@@ -17,6 +18,7 @@ export interface ISerializedValues<T> {
 
 export class Form {
     buttons:IButton[];
+    checkboxes:ICheckbox[];
     inputs:IInput[];
     selects:ISelect[];
     toggles:IToggle[];
@@ -24,12 +26,13 @@ export class Form {
     readonly setState:(newState:any) => void;
 
     constructor(setState:(newState:any) => void = (nS:any) => null) {
-        this.buttons  = [];
-        this.inputs   = [];
-        this.selects  = [];
-        this.toggles  = [];
-        this.isValid  = true;
-        this.setState = setState;
+        this.buttons    = [];
+        this.checkboxes = [];
+        this.inputs     = [];
+        this.selects    = [];
+        this.toggles    = [];
+        this.isValid    = true;
+        this.setState   = setState;
     }
 
     static validateInput(input:IInput, touch = false):IInput {
@@ -57,6 +60,9 @@ export class Form {
         let index = -1;
 
         switch (type) {
+            case ElementType.Checkbox:
+                index = findIndex((i:ICheckbox) => equals(i.name, n), this.checkboxes);
+                break;
             case ElementType.Input:
                 index = findIndex((i:IInput) => equals(i.name, n), this.inputs);
                 break;
@@ -73,10 +79,13 @@ export class Form {
         return (gte(index, 0)) ? Ok(index) : Err(index);
     }
 
-    updateElement(newElement:IInput|ISelect|IToggle, type:ElementType):this {
+    updateElement(newElement:IInput|ISelect|IToggle|ICheckbox, type:ElementType):this {
         this.getIndexByName(newElement.name, type).match({
             ok: (_) => {
                 switch (type) {
+                    case ElementType.Checkbox:
+                        this.checkboxes = update(_, newElement as ICheckbox, this.checkboxes);
+                        break;
                     case ElementType.Input:
                         this.inputs = update(_, newElement as IInput, this.inputs);
                         break;
@@ -97,10 +106,15 @@ export class Form {
             .updateState();
     }
 
-    updateValueIn(n:string, v:string|string[]|ToggleValue, type:ElementType):this {
+    updateValueIn(n:string, v:string|string[]|ToggleValue|CheckboxValue[], type:ElementType):this {
         this.getIndexByName(n, type).match({
             ok: (_) => {
                 switch (type) {
+                    case ElementType.Checkbox:
+                        this.checkboxes = update(_, Update(this.checkboxes[_], {
+                            values: v as CheckboxValue[]
+                        }), this.checkboxes);
+                        break;
                     case ElementType.Input:
                         this.inputs = update(_, Update(this.inputs[_], {
                             value: v as string
@@ -127,6 +141,7 @@ export class Form {
     populateFromPrevious(form:Option<Form>):this {
         form.match({
             some: (_) => {
+                _.checkboxes.forEach((c:ICheckbox) => this.updateValueIn(c.name, c.values, ElementType.Checkbox));
                 _.inputs.forEach((i:IInput) => this.updateValueIn(i.name, i.value, ElementType.Input));
                 _.selects.forEach((s:ISelect) => this.updateValueIn(s.name, s.value, ElementType.Select));
                 _.toggles.forEach((t:IToggle) => this.updateValueIn(t.name, t.value, ElementType.Toggle));
@@ -174,6 +189,11 @@ export class Form {
     getButtonByName(n:string):IButton {
         return Some(find((button:IButton) => equals(button.name, n), this.buttons))
             .unwrap_or(configureButton({name: n}));
+    }
+
+    getCheckboxByName(n:string):ICheckbox {
+        return Some(find((i:ICheckbox) => equals(i.name, n), this.checkboxes))
+            .unwrap_or(configureCheckbox({name: n}));
     }
 
     getInputByName(n:string):IInput {

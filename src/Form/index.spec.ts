@@ -5,6 +5,7 @@ import * as sinon from 'sinon';
 import { Some, Ok, Err, _Ok, _Err } from 'tsp-monads';
 import { Form, ElementType } from '../';
 import { configureButton } from './Button';
+import { configureCheckbox, ICheckbox } from './Checkbox';
 import { configureInput, IInput } from './Input';
 import { configureSelect, ISelect } from './Select';
 import { configureToggle, IToggle } from './Toggle';
@@ -27,6 +28,7 @@ describe('Form', () => {
             const subject = new Form((nS:string) => null);
 
             expect(subject.buttons).to.deep.equal([]);
+            expect(subject.checkboxes).to.deep.equal([]);
             expect(subject.inputs).to.deep.equal([]);
             expect(subject.selects).to.deep.equal([]);
             expect(subject.toggles).to.deep.equal([]);
@@ -108,6 +110,26 @@ describe('Form', () => {
             expect((subject as _Err<number>).unwrap_err()).to.equal(-1);
         });
 
+        describe('Checkbox', () => {
+            it('returns -1 if checkbox not found by name', () => {
+                let form = new Form();
+                form.checkboxes.push(configureCheckbox({name: 'a'}), configureCheckbox({name: 'b'}), configureCheckbox({name: 'c'}));
+
+                const subject = form.getIndexByName('z', ElementType.Checkbox);
+                expect(subject instanceof _Err).to.equal(true);
+                expect((subject as _Err<number>).unwrap_err()).to.equal(-1);
+            });
+
+            it('returns correct index if checkbox found by name', () => {
+                let form = new Form();
+                form.checkboxes.push(configureCheckbox({name: 'a'}), configureCheckbox({name: 'b'}), configureCheckbox({name: 'c'}));
+
+                const subject = form.getIndexByName('b', ElementType.Checkbox);
+                expect(subject instanceof _Ok).to.equal(true);
+                expect((subject as _Ok<number>).unwrap()).to.equal(1);
+            });
+        });
+
         describe('Input', () => {
             it('returns -1 if input not found by name', () => {
                 let form = new Form();
@@ -170,6 +192,55 @@ describe('Form', () => {
     });
 
     describe('updateElement', () => {
+        describe('Checkbox', () => {
+            it('returns instance of Form with an updated checkbox at correct index, calls validateInputs(), validateForm(), and updateState()', () => {
+                const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
+                const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
+
+                const getIndexByName = sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Ok(1));
+
+                const newElement = configureCheckbox({disabled: true});
+
+                let form = new Form();
+                form.checkboxes.push(configureCheckbox(), configureCheckbox(), configureCheckbox());
+
+                const subject = form.updateElement(newElement, ElementType.Checkbox);
+
+                expect(subject instanceof Form).to.equal(true);
+                expect(subject.checkboxes[getIndexByName().unwrap()]).to.deep.equal(newElement);
+                expect(validateInputs.calledOnce).to.equal(true);
+                expect(validateForm.calledOnce).to.equal(true);
+                expect(reRender.calledOnce).to.equal(true);
+            });
+
+            it('returns instance of Form with untouched checkbox, calls validateInputs(), validateForm(), and updateState()', () => {
+                const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
+                const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
+
+                sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Err(-1));
+
+                const element = configureCheckbox({disabled: true}),
+                      newElement = configureCheckbox({disabled: false});
+
+                let form = new Form();
+                form.checkboxes.push(element);
+
+                const subject = form.updateElement(newElement, ElementType.Input);
+
+                expect(subject instanceof Form).to.equal(true);
+                expect(subject.checkboxes[0]).to.deep.equal(element);
+                expect(validateInputs.calledOnce).to.equal(true);
+                expect(validateForm.calledOnce).to.equal(true);
+                expect(reRender.calledOnce).to.equal(true);
+            });
+        });
+
         describe('Input', () => {
             it('returns instance of Form with an updated input at correct index, calls validateInputs(), validateForm(), and updateState()', () => {
                 const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
@@ -316,8 +387,43 @@ describe('Form', () => {
     });
 
     describe('updateValueIn', () => {
+        describe('Checkbox', () => {
+            it('returns instance of Form with an updated checkbox at correct index', () => {
+                const getIndexByName = sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Ok(2));
+
+                const element        = configureCheckbox({name: 'Name'});
+                const updatedElement = Update(element, {values: [{label: 'Label', value: 'value'}]});
+
+                let form = new Form();
+                form.checkboxes.push(configureCheckbox(), configureCheckbox(), element);
+
+                const subject = form.updateValueIn(updatedElement.name, updatedElement.values, ElementType.Checkbox);
+
+                expect(subject instanceof Form).to.equal(true);
+                expect(subject.checkboxes[getIndexByName().unwrap()]).to.deep.equal(updatedElement);
+            });
+
+            it('returns instance of Form with untouched inputs', () => {
+                sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Err(-1));
+
+                const element = configureCheckbox({name: 'Name'});
+
+                let form = new Form();
+                form.checkboxes.push(element);
+
+                const subject = form.updateElement(configureCheckbox({values: [{label: 'Label', value: 'value'}]}), ElementType.Checkbox);
+
+                expect(form instanceof Form).to.equal(true);
+                expect(subject.checkboxes[0]).to.deep.equal(element);
+            });
+        });
+
         describe('Input', () => {
-            it('returns instance of Form with an updated input at correct index', () => {
+            it('returns instance of Form with an updated checkbox at correct index', () => {
                 const getIndexByName = sandbox
                     .stub(Form.prototype, 'getIndexByName')
                     .returns(Ok(2));
@@ -423,6 +529,38 @@ describe('Form', () => {
     });
 
     describe('populateFromPrevious', () => {
+        describe('Checkbox', () => {
+            it('should update the value of each checkbox in a form', () => {
+                const updateValueIn = sandbox.spy(Form.prototype, 'updateValueIn');
+
+                const checkboxes = [
+                    configureCheckbox({name: 'Name0'}),
+                    configureCheckbox({name: 'Name1'}),
+                    configureCheckbox({name: 'Name2'})
+                ];
+
+                const checkboxesWithValues = checkboxes
+                  .map((checkbox, index) => Update(checkbox, {values: [{label: `NewLabel${index}`, value: `NewValue${index}`}]}));
+
+                let form = new Form();
+                form.checkboxes.push(...checkboxesWithValues);
+                form.checkboxes.push(configureCheckbox({name: 'Name3'}));
+
+                let subject = new Form();
+                subject.checkboxes.push(...checkboxes);
+                subject.populateFromPrevious(Some(form));
+
+                expect(updateValueIn.callCount).to.equal(form.checkboxes.length);
+
+                form.checkboxes.forEach((checkbox:ICheckbox, index:number) => {
+                    const args = updateValueIn.getCall(index).args;
+                    expect(args).to.deep.equal([checkbox.name, checkbox.values, ElementType.Checkbox]);
+                });
+
+                expect(subject.checkboxes).to.deep.equal(checkboxesWithValues);
+            });
+        });
+
         describe('Input', () => {
             it('should update the value of each input in a form', () => {
                 const updateValueIn = sandbox.spy(Form.prototype, 'updateValueIn');
@@ -685,6 +823,29 @@ describe('Form', () => {
             const subject = Update(form.getButtonByName('Test'), {onClick});
 
             expect(subject).to.deep.equal(configureButton({name: 'Test', onClick}));
+        });
+    });
+
+    describe('getCheckboxByName', () => {
+        it('correctly returns a ICheckbox getConfig if found by name', () => {
+            const checkbox = configureCheckbox({name: 'Test'});
+
+            let form = new Form();
+            form.checkboxes.push(checkbox);
+
+            const subject = form.getCheckboxByName('Test');
+
+            expect(subject).to.deep.equal(checkbox);
+        });
+
+        it('correctly returns a default ICheckbox getConfig if NOT found by name', () => {
+            const form = new Form();
+
+            const onClick = (nC:ICheckbox) => null;
+
+            const subject = Update(form.getCheckboxByName('Test'), {onClick});
+
+            expect(subject).to.deep.equal(configureCheckbox({name: 'Test', onClick}));
         });
     });
 
