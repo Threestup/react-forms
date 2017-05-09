@@ -4,7 +4,7 @@ export function Update<T>(initialState:T, overrideObject:Partial<T>):T {
     return Object.assign({}, initialState, overrideObject);
 }
 
-export type Element = 'input' | 'textarea' | 'select' | 'tab-selection' | 'toggle';
+export type Element = 'input' | 'textarea' | 'select' | 'tab-selection' | 'toggle' | 'checkbox';
 
 export const DefaultClassName = 'form-element';
 
