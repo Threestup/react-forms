@@ -5,7 +5,7 @@ export interface IOption {
     label:string;
 }
 
-export interface ISelect {
+export interface ISelect<T = any> {
     disabled:boolean;
     label:string;
     multiple:boolean;
@@ -15,9 +15,10 @@ export interface ISelect {
     defaultOptions:IOption[];
     value:string|string[];
     wrapperClassName:string;
+    selectData:T; 
 }
 
-export type ISelectPartial = Partial<ISelect>;
+export type ISelectPartial<T = any> = Partial<ISelect<T>>;
 
 const defaultSelectConfig:ISelect = {
     disabled: false,
@@ -29,9 +30,10 @@ const defaultSelectConfig:ISelect = {
     defaultOptions: [],
     value: '',
     wrapperClassName: '',
+    selectData: null
 };
 
-export const configureSelect = (override:ISelectPartial = {}):ISelect => {
+export function configureSelect<T = any>(override:ISelectPartial<T> = {}):ISelect<T> {
     return Object.assign({}, defaultSelectConfig, override);
 };
 
