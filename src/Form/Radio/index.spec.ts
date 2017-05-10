@@ -9,7 +9,7 @@ describe('Radio', () => {
             expect(subject.disabled).to.equal(false);
             expect(subject.name).to.equal('');
             expect(subject.onClick(configureRadio())).to.equal(null);
-            expect(subject.selectedValue).to.equal(undefined);
+            expect(subject.selectedValue).to.equal('');
             expect(subject.values).to.deep.equal([]);
             expect(subject.wrapperClassName).to.equal('');
         });
