@@ -10,7 +10,7 @@ export interface IRadio {
     disabled:boolean;
     name:string;
     onClick:FormUpdateEvent<IRadio>;
-    selectedValue: string;
+    selectedValue:string;
     values:RadioValue[];
     wrapperClassName:string;
 }
