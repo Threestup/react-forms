@@ -11,6 +11,7 @@ import { configureSelect, ISelect } from './Select';
 import { configureToggle, IToggle } from './Toggle';
 import * as Validate from './Validation';
 import { Update } from './Utils';
+import { configureRadio, IRadio } from './Radio'
 
 describe('Form', () => {
     let sandbox:any;
@@ -29,6 +30,7 @@ describe('Form', () => {
 
             expect(subject.buttons).to.deep.equal([]);
             expect(subject.checkboxes).to.deep.equal([]);
+            expect(subject.radios).to.deep.equal([]);
             expect(subject.inputs).to.deep.equal([]);
             expect(subject.selects).to.deep.equal([]);
             expect(subject.toggles).to.deep.equal([]);
@@ -125,6 +127,26 @@ describe('Form', () => {
                 form.checkboxes.push(configureCheckbox({name: 'a'}), configureCheckbox({name: 'b'}), configureCheckbox({name: 'c'}));
 
                 const subject = form.getIndexByName('b', ElementType.Checkbox);
+                expect(subject instanceof _Ok).to.equal(true);
+                expect((subject as _Ok<number>).unwrap()).to.equal(1);
+            });
+        });
+
+        describe('Radio', () => {
+            it('returns -1 if radio not found by name', () => {
+                let form = new Form();
+                form.radios.push(configureRadio({name: 'a'}), configureRadio({name: 'b'}), configureRadio({name: 'c'}));
+
+                const subject = form.getIndexByName('z', ElementType.Radio);
+                expect(subject instanceof _Err).to.equal(true);
+                expect((subject as _Err<number>).unwrap_err()).to.equal(-1);
+            });
+
+            it('returns correct index if radio found by name', () => {
+                let form = new Form();
+                form.radios.push(configureRadio({name: 'a'}), configureRadio({name: 'b'}), configureRadio({name: 'c'}));
+
+                const subject = form.getIndexByName('b', ElementType.Radio);
                 expect(subject instanceof _Ok).to.equal(true);
                 expect((subject as _Ok<number>).unwrap()).to.equal(1);
             });
@@ -231,10 +253,59 @@ describe('Form', () => {
                 let form = new Form();
                 form.checkboxes.push(element);
 
-                const subject = form.updateElement(newElement, ElementType.Input);
+                const subject = form.updateElement(newElement, ElementType.Checkbox);
 
                 expect(subject instanceof Form).to.equal(true);
                 expect(subject.checkboxes[0]).to.deep.equal(element);
+                expect(validateInputs.calledOnce).to.equal(true);
+                expect(validateForm.calledOnce).to.equal(true);
+                expect(reRender.calledOnce).to.equal(true);
+            });
+        });
+
+        describe('Radio', () => {
+            it('returns instance of Form with an updated radio at correct index, calls validateInputs(), validateForm(), and updateState()', () => {
+                const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
+                const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
+
+                const getIndexByName = sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Ok(1));
+
+                const newElement = configureRadio({disabled: true});
+
+                let form = new Form();
+                form.radios.push(configureRadio(), configureRadio(), configureRadio());
+
+                const subject = form.updateElement(newElement, ElementType.Radio);
+
+                expect(subject instanceof Form).to.equal(true);
+                expect(subject.radios[getIndexByName().unwrap()]).to.deep.equal(newElement);
+                expect(validateInputs.calledOnce).to.equal(true);
+                expect(validateForm.calledOnce).to.equal(true);
+                expect(reRender.calledOnce).to.equal(true);
+            });
+
+            it('returns instance of Form with untouched radio, calls validateInputs(), validateForm(), and updateState()', () => {
+                const validateInputs = sandbox.spy(Form.prototype, 'validateInputs');
+                const validateForm   = sandbox.spy(Form.prototype, 'validateForm');
+                const reRender       = sandbox.spy(Form.prototype, 'updateState');
+
+                sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Err(-1));
+
+                const element = configureRadio({disabled: true}),
+                      newElement = configureRadio({disabled: false});
+
+                let form = new Form();
+                form.radios.push(element);
+
+                const subject = form.updateElement(newElement, ElementType.Radio);
+
+                expect(subject instanceof Form).to.equal(true);
+                expect(subject.radios[0]).to.deep.equal(element);
                 expect(validateInputs.calledOnce).to.equal(true);
                 expect(validateForm.calledOnce).to.equal(true);
                 expect(reRender.calledOnce).to.equal(true);
@@ -422,8 +493,43 @@ describe('Form', () => {
             });
         });
 
+        describe('Radio', () => {
+            it('(when radio found) returns instance of Form with an updated Radio at correct index', () => {
+                const getIndexByName = sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Ok(2));
+
+                const element        = configureRadio({name: 'Name'});
+                const updatedElement = Update(element, {values: [{label: 'Label', value: 'value'}]});
+
+                let form = new Form();
+                form.radios.push(configureRadio(), configureRadio(), element);
+
+                const subject = form.updateValueIn(updatedElement.name, updatedElement.values, ElementType.Radio);
+
+                expect(subject instanceof Form).to.equal(true);
+                expect(subject.radios[getIndexByName().unwrap()]).to.deep.equal(updatedElement);
+            });
+
+            it('(when radio not found) returns instance of Form with untouched radios', () => {
+                sandbox
+                  .stub(Form.prototype, 'getIndexByName')
+                  .returns(Err(-1));
+
+                const element = configureRadio({name: 'Name'});
+
+                let form = new Form();
+                form.radios.push(element);
+
+                const subject = form.updateElement(configureRadio({values: [{label: 'Label', value: 'value'}]}), ElementType.Radio);
+
+                expect(form instanceof Form).to.equal(true);
+                expect(subject.radios[0]).to.deep.equal(element);
+            });
+        });
+
         describe('Input', () => {
-            it('returns instance of Form with an updated checkbox at correct index', () => {
+            it('returns instance of Form with an updated input at correct index', () => {
                 const getIndexByName = sandbox
                     .stub(Form.prototype, 'getIndexByName')
                     .returns(Ok(2));
@@ -558,6 +664,38 @@ describe('Form', () => {
                 });
 
                 expect(subject.checkboxes).to.deep.equal(checkboxesWithValues);
+            });
+        });
+
+        describe('Radio', () => {
+            it('should update the value of each radio in a form', () => {
+                const updateValueIn = sandbox.spy(Form.prototype, 'updateValueIn');
+
+                const radios = [
+                    configureRadio({name: 'Name0'}),
+                    configureRadio({name: 'Name1'}),
+                    configureRadio({name: 'Name2'})
+                ];
+
+                const radiosWithValues = radios
+                  .map((radio, index) => Update(radio, {values: [{label: `NewLabel${index}`, value: `NewValue${index}`}]}));
+
+                let form = new Form();
+                form.radios.push(...radiosWithValues);
+                form.radios.push(configureRadio({name: 'Name3'}));
+
+                let subject = new Form();
+                subject.radios.push(...radios);
+                subject.populateFromPrevious(Some(form));
+
+                expect(updateValueIn.callCount).to.equal(form.radios.length);
+
+                expect(subject.radios).to.deep.equal(radiosWithValues);
+
+                form.radios.forEach((radio:IRadio, index:number) => {
+                    const args = updateValueIn.getCall(index).args;
+                    expect(args).to.deep.equal([radio.name, radio.values, ElementType.Radio]);
+                });
             });
         });
 
@@ -846,6 +984,29 @@ describe('Form', () => {
             const subject = Update(form.getCheckboxByName('Test'), {onClick});
 
             expect(subject).to.deep.equal(configureCheckbox({name: 'Test', onClick}));
+        });
+    });
+
+    describe('getRadioByName', () => {
+        it('correctly returns a IRadio getConfig if found by name', () => {
+            const radio = configureRadio({name: 'Test'});
+
+            let form = new Form();
+            form.radios.push(radio);
+
+            const subject = form.getRadioByName('Test');
+
+            expect(subject).to.deep.equal(radio);
+        });
+
+        it('correctly returns a default IRadio getConfig if NOT found by name', () => {
+            const form = new Form();
+
+            const onClick = (nR:IRadio) => null;
+
+            const subject = Update(form.getRadioByName('Test'), {onClick});
+
+            expect(subject).to.deep.equal(configureRadio({name: 'Test', onClick}));
         });
     });
 
