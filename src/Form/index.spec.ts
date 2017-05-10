@@ -476,7 +476,7 @@ describe('Form', () => {
                 expect(subject.checkboxes[getIndexByName().unwrap()]).to.deep.equal(updatedElement);
             });
 
-            it('returns instance of Form with untouched inputs', () => {
+            it('returns instance of Form with untouched checkboxes', () => {
                 sandbox
                   .stub(Form.prototype, 'getIndexByName')
                   .returns(Err(-1));
@@ -988,7 +988,7 @@ describe('Form', () => {
     });
 
     describe('getRadioByName', () => {
-        it('correctly returns a IRadio getConfig if found by name', () => {
+        it('correctly returns an IRadio getConfig if found by name', () => {
             const radio = configureRadio({name: 'Test'});
 
             let form = new Form();
