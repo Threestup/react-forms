@@ -122,6 +122,7 @@ export class Form {
 
         return this
             .validateInputs()
+            .validateSelects()
             .validateForm()
             .updateState();
     }
@@ -191,9 +192,15 @@ export class Form {
         return this;
     }
 
+    validateSelects(touch = false):this {
+        this.selects = this.selects.map((s:ISelect) => Form.validateSelect(s, touch));
+        return this;
+    }
+
     submit(cb:Function) {
         this
             .validateInputs(true)
+            .validateSelects(true)
             .validateForm();
 
         if (this.isValid)
