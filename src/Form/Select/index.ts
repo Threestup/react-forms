@@ -6,31 +6,37 @@ export interface IOption {
 }
 
 export interface ISelect<T = any> {
+    defaultOptions:IOption[];
     disabled:boolean;
     label:string;
     multiple:boolean;
     name:string;
     onUpdate:FormUpdateEvent<ISelect>;
     options:IOption[];
-    defaultOptions:IOption[];
+    required:boolean;
+    selectData:T;
+    touched:boolean;
+    valid:boolean;
     value:string|string[];
     wrapperClassName:string;
-    selectData:T; 
 }
 
 export type ISelectPartial<T = any> = Partial<ISelect<T>>;
 
 const defaultSelectConfig:ISelect = {
+    defaultOptions: [],
     disabled: false,
     label: '',
     multiple: false,
     name: '',
     onUpdate: (newSelect:ISelect) => null,
     options: [],
-    defaultOptions: [],
+    required: false,
+    selectData: null,
+    touched: false,
+    valid: true,
     value: '',
-    wrapperClassName: '',
-    selectData: null
+    wrapperClassName: ''
 };
 
 export function configureSelect<T = any>(override:ISelectPartial<T> = {}):ISelect<T> {
