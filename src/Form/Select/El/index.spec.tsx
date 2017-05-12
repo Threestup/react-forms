@@ -56,13 +56,17 @@ describe('Select/El', () => {
             expect(subject.childAt(1).props().disabled).to.equal(newProps.disabled);
 
             expect(subject.childAt(1).children().length).to.equal(optionsCount);
+
+            expect(subject.childAt(2).name()).to.equal('small');
+            expect(subject.childAt(2).hasClass('error-message')).to.equal(true);
+            expect(subject.childAt(2).text()).to.equal('Please select a value');
         });
 
         it('should correctly render the component with a default value', () => {
             const optionsCount = 1;
 
             const options  = getOptions(optionsCount);
-            const defaultOptions  = [{value: 'IAmATest', label: 'Please Select'}]
+            const defaultOptions  = [{value: 'IAmATest', label: 'Please Select'}];
             const newProps = configureSelect({name: 'Select', label: 'Test Label', options, defaultOptions, value: defaultOptions[0].value});
 
             const subject = renderComponent(newProps).find('div');
@@ -90,6 +94,25 @@ describe('Select/El', () => {
                 const subject = renderComponent().find('div').first();
 
                 expect(subject.props().className).to.equal(appendToWrapperClass());
+            });
+        });
+
+        describe('Error message', () => {
+            it('renders error-message when invalid and touched', () => {
+                const config = configureSelect({isValid: false, touched: true});
+                const subject = renderComponent(config).find('.error-message');
+                expect(subject.hasClass('show')).to.equal(true);
+            });
+
+            it('does not render error-message when invalid and untouched', () => {
+                const config = configureSelect({isValid: false});
+                const subject = renderComponent(config).find('.error-message');
+                expect(subject.hasClass('show')).to.equal(false);
+            });
+
+            it('does not render error-message when valid', () => {
+                const subject = renderComponent().find('.error-message');
+                expect(subject.hasClass('show')).to.equal(false);
             });
         });
 
