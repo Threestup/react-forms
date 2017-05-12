@@ -182,8 +182,9 @@ export class Form {
     }
 
     validateForm():this {
-        const invalidInputs = filter((i:IInput) => equals(i.isValid, false), this.inputs);
-        this.isValid        = equals(invalidInputs.length, 0);
+        const invalidInputs  = filter((i:IInput) => equals(i.isValid, false), this.inputs);
+        const invalidSelects = filter((s:ISelect) => equals(s.isValid, false), this.selects);
+        this.isValid         = equals(invalidInputs.length, 0) && equals(invalidSelects.length, 0);
         return this;
     }
 

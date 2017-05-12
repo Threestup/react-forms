@@ -859,19 +859,22 @@ describe('Form', () => {
     });
 
     describe('validateForm', () => {
-        it('returns a correctly updated instance of Form when no inputs present', () => {
-            let form    = new Form();
-            form.inputs = []; // just to make sure it's empty
+        it('returns a correctly updated instance of Form when no inputs or selects present', () => {
+            let form     = new Form();
+            form.inputs  = []; // just to make sure it's empty
+            form.selects = []; // just to make sure it's empty
 
             const subject = form.validateForm();
             expect(subject instanceof Form).to.equal(true);
             expect(subject.isValid).to.equal(true);
         });
 
-        it('returns a correctly updated instance of Form when all inputs are valid', () => {
+        it('returns a correctly updated instance of Form when all inputs and selects are valid', () => {
             let form = new Form();
             form.inputs.push(configureInput({isValid: true}));
             form.inputs.push(configureInput({isValid: true}));
+            form.selects.push(configureSelect({isValid: true}));
+            form.selects.push(configureSelect({isValid: true}));
 
             const subject = form.validateForm();
             expect(subject instanceof Form).to.equal(true);
@@ -882,6 +885,21 @@ describe('Form', () => {
             let form = new Form();
             form.inputs.push(configureInput({isValid: true}));
             form.inputs.push(configureInput({isValid: false}));
+            form.inputs.push(configureInput({isValid: true}));
+            form.selects.push(configureSelect({isValid: true}));
+            form.selects.push(configureSelect({isValid: true}));
+
+            const subject = form.validateForm();
+            expect(subject instanceof Form).to.equal(true);
+            expect(subject.isValid).to.equal(false);
+        });
+
+        it('returns a correctly updated instance of Form if at least one select is not valid', () => {
+            let form = new Form();
+            form.selects.push(configureSelect({isValid: true}));
+            form.selects.push(configureSelect({isValid: false}));
+            form.selects.push(configureSelect({isValid: true}));
+            form.inputs.push(configureInput({isValid: true}));
             form.inputs.push(configureInput({isValid: true}));
 
             const subject = form.validateForm();
