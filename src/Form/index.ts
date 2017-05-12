@@ -3,7 +3,7 @@ import { Option, Some, Result, Ok, Err } from 'tsp-monads';
 import { IButton, configureButton } from './Button';
 import { CheckboxValue, configureCheckbox, ICheckbox } from './Checkbox';
 import { IInput, configureInput, IInputPartial } from './Input';
-import { ISelect, configureSelect } from './Select';
+import { ISelect, configureSelect, ISelectPartial } from './Select';
 import { IToggle, configureToggle, ToggleValue } from './Toggle';
 import { passesValidation, passesContextValidation } from './Validation';
 import { Update } from './Utils';
@@ -52,6 +52,17 @@ export class Form {
         };
 
         return Object.assign({}, input, updateConfig);
+    }
+
+    static validateSelect(select:ISelect, touch = false):ISelect {
+        const {value, required} = select;
+
+        let updateConfig:ISelectPartial = {
+            isValid: required ? value.length > 0 : true,
+            touched: touch ? true : select.touched
+        };
+
+        return Object.assign({}, select, updateConfig);
     }
 
     updateState():this {

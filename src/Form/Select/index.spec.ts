@@ -8,6 +8,7 @@ describe('Select', () => {
 
             expect(subject.defaultOptions).to.deep.equal([]);
             expect(subject.disabled).to.equal(false);
+            expect(subject.isValid).to.equal(true);
             expect(subject.label).to.equal('');
             expect(subject.multiple).to.equal(false);
             expect(subject.name).to.equal('');
@@ -16,7 +17,6 @@ describe('Select', () => {
             expect(subject.required).to.equal(false);
             expect(subject.selectData).to.equal(null);
             expect(subject.touched).to.equal(false);
-            expect(subject.valid).to.equal(true);
             expect(subject.value).to.equal('');
             expect(subject.wrapperClassName).to.equal('');
         });
@@ -30,6 +30,7 @@ describe('Select', () => {
             const overrideConfig:ISelect<number> = {
                 defaultOptions: [{value: 'A', label: 'Label for A'}],
                 disabled: true,
+                isValid: false,
                 label: 'New Label',
                 multiple: true,
                 name: 'New Name',
@@ -38,7 +39,6 @@ describe('Select', () => {
                 required: true,
                 selectData: 1,
                 touched: true,
-                valid: false,
                 value: ['a', 'b'],
                 wrapperClassName: 'NewClassName'
             };
@@ -49,6 +49,7 @@ describe('Select', () => {
 
             expect(subject.defaultOptions).to.deep.equal(overrideConfig.defaultOptions);
             expect(subject.disabled).to.equal(overrideConfig.disabled);
+            expect(subject.isValid).to.deep.equal(overrideConfig.isValid);
             expect(subject.label).to.equal(overrideConfig.label);
             expect(subject.multiple).to.equal(overrideConfig.multiple);
             expect(subject.name).to.equal(overrideConfig.name);
@@ -57,7 +58,6 @@ describe('Select', () => {
             expect(subject.required).to.deep.equal(overrideConfig.required);
             expect(subject.selectData).to.deep.equal(overrideConfig.selectData);
             expect(subject.touched).to.deep.equal(overrideConfig.touched);
-            expect(subject.valid).to.deep.equal(overrideConfig.valid);
             expect(subject.value).to.deep.equal(overrideConfig.value);
             expect(subject.wrapperClassName).to.deep.equal(overrideConfig.wrapperClassName);
 

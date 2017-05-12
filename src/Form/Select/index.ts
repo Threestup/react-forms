@@ -8,6 +8,7 @@ export interface IOption {
 export interface ISelect<T = any> {
     defaultOptions:IOption[];
     disabled:boolean;
+    isValid:boolean;
     label:string;
     multiple:boolean;
     name:string;
@@ -16,7 +17,6 @@ export interface ISelect<T = any> {
     required:boolean;
     selectData:T;
     touched:boolean;
-    valid:boolean;
     value:string|string[];
     wrapperClassName:string;
 }
@@ -26,6 +26,7 @@ export type ISelectPartial<T = any> = Partial<ISelect<T>>;
 const defaultSelectConfig:ISelect = {
     defaultOptions: [],
     disabled: false,
+    isValid: true,
     label: '',
     multiple: false,
     name: '',
@@ -34,7 +35,6 @@ const defaultSelectConfig:ISelect = {
     required: false,
     selectData: null,
     touched: false,
-    valid: true,
     value: '',
     wrapperClassName: ''
 };
