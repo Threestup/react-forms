@@ -89,6 +89,48 @@ describe('Form', () => {
         });
     });
 
+    describe('validateInput', () => {
+        it('returns correctly updated Select config when validation passes, does not touch', () => {
+            const select = configureSelect({value: 'Test', required: true});
+            const subject = Form.validateSelect(select);
+            expect(subject.isValid).to.equal(true);
+            expect(subject.touched).to.equal(false);
+        });
+
+        it('returns correctly updated Select config when validation passes, touches when required', () => {
+            const select = configureSelect({value: 'Test', required: false});
+            const subject = Form.validateSelect(select, true);
+            expect(subject.isValid).to.equal(true);
+            expect(subject.touched).to.equal(true);
+        });
+
+        it('returns correctly updated Select config when validation does not pass, does not touch', () => {
+            const select = configureSelect({value: '', required: true});
+            const subject = Form.validateSelect(select);
+            expect(subject.isValid).to.equal(false);
+            expect(subject.touched).to.equal(false);
+        });
+
+        it('returns correctly updated Select config when validation does not pass, touches when required', () => {
+            const select = configureSelect({value: '', required: true});
+            const subject = Form.validateSelect(select, true);
+            expect(subject.isValid).to.equal(false);
+            expect(subject.touched).to.equal(true);
+        });
+
+        it('works when value is an empty list', () => {
+            const select = configureSelect({value: [], required: true});
+            const subject = Form.validateSelect(select);
+            expect(subject.isValid).to.equal(false);
+        });
+
+        it('works when value is a list of strings', () => {
+            const select = configureSelect({value: ['a', 'b'], required: true});
+            const subject = Form.validateSelect(select);
+            expect(subject.isValid).to.equal(true);
+        });
+    });
+
     describe('updateState', () => {
         it('correctly calls the method passed into instance constructor', () => {
             let newState:any   = null;
