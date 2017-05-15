@@ -6,3 +6,5 @@ export { ISelect, configureSelect } from './Form/Select';
 export { SelectComponent } from './Form/Select/El';
 export { IToggle, configureToggle } from './Form/Toggle';
 export { ToggleComponent } from './Form/Toggle/El';
+export { ICheckbox, configureCheckbox } from './Form/Checkbox';
+export { CheckboxComponent } from './Form/Checkbox/El'

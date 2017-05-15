@@ -9,7 +9,7 @@ export interface RadioValue {
 export interface IRadio {
     disabled:boolean;
     name:string;
-    onClick:FormUpdateEvent<IRadio>;
+    onChange:FormUpdateEvent<IRadio>;
     selectedValue:string;
     values:RadioValue[];
     wrapperClassName:string;
@@ -20,7 +20,7 @@ export type IRadioPartial = Partial<IRadio>;
 const defaultRadioConfig:IRadio = {
     disabled: false,
     name: '',
-    onClick: (newRadio:IRadio) => null,
+    onChange: (newRadio:IRadio) => null,
     selectedValue: '',
     values: [],
     wrapperClassName: '',
