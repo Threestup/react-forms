@@ -19,7 +19,7 @@ export class RadioComponent extends React.Component<IProps, {}> {
         return (
             <ul className={appendToWrapperClass(config.wrapperClassName, 'radio')}>
                 {config.values.map((_:RadioValue, index:number) => (
-                    <li>
+                    <li key={index}>
                         <input
                             type="radio"
                             disabled={config.disabled}
@@ -28,7 +28,6 @@ export class RadioComponent extends React.Component<IProps, {}> {
                             value={_.value}
                             name={config.name}
                             checked={_.value === config.selectedValue}
-                            key={index}
                         />
                         <label htmlFor={_.value}>{_.label}</label>
                     </li>

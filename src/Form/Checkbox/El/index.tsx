@@ -28,13 +28,12 @@ export class CheckboxComponent extends React.Component<IProps, {}> {
         return (
             <ul className={appendToWrapperClass(config.wrapperClassName, 'checkbox')}>
                 {config.values.map((_: CheckboxValue, index: number ) => (
-                  <li>
+                  <li key={index}>
                       <input type="checkbox" disabled={config.disabled} id={_.value}
                              onChange={e => CheckboxComponent.onChange(_.value, config)}
                              value={_.value}
                              name={config.name}
                              checked={contains(_.value, config.selectedValues)}
-                             key={index}
                             />
 
                       <label htmlFor={_.value}>{_.label}</label>
