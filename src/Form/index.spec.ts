@@ -979,11 +979,11 @@ describe('Form', () => {
         it('correctly returns a default ICheckbox getConfig if NOT found by name', () => {
             const form = new Form();
 
-            const onClick = (nC:ICheckbox) => null;
+            const onChange = (nC:ICheckbox) => null;
 
-            const subject = Update(form.getCheckboxByName('Test'), {onClick});
+            const subject = Update(form.getCheckboxByName('Test'), {onChange});
 
-            expect(subject).to.deep.equal(configureCheckbox({name: 'Test', onClick}));
+            expect(subject).to.deep.equal(configureCheckbox({name: 'Test', onChange}));
         });
     });
 
@@ -1002,11 +1002,11 @@ describe('Form', () => {
         it('correctly returns a default IRadio getConfig if NOT found by name', () => {
             const form = new Form();
 
-            const onClick = (nR:IRadio) => null;
+            const onChange = (nR:IRadio) => null;
 
-            const subject = Update(form.getRadioByName('Test'), {onClick});
+            const subject = Update(form.getRadioByName('Test'), {onChange});
 
-            expect(subject).to.deep.equal(configureRadio({name: 'Test', onClick}));
+            expect(subject).to.deep.equal(configureRadio({name: 'Test', onChange}));
         });
     });
 

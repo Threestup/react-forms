@@ -24,16 +24,16 @@ describe('Checkbox/El', () => {
         sandbox.restore();
     });
 
-    describe('onClick', () => {
+    describe('onChange', () => {
         it('should add an item to selectedItems if previously not there', () => {
             let updatedCheckbox:ICheckbox|null = null;
 
-            const onClick = (nC: ICheckbox) => updatedCheckbox = nC;
+            const onChange = (nC: ICheckbox) => updatedCheckbox = nC;
 
-            const config = configureCheckbox({onClick}),
+            const config = configureCheckbox({onChange}),
                   val = 'a';
 
-            CheckboxComponent.onClick(val, config);
+            CheckboxComponent.onChange(val, config);
 
             expect(updatedCheckbox!.selectedValues).to.deep.equal([val]);
         });
@@ -41,13 +41,13 @@ describe('Checkbox/El', () => {
         it('should remove an item from selectedItems if previously there', () => {
             let updatedCheckbox:ICheckbox|null = null;
 
-            const onClick = (nC: ICheckbox) => updatedCheckbox = nC,
+            const onChange = (nC: ICheckbox) => updatedCheckbox = nC,
                   selectedValues = ['a', 'b', 'c'];
 
-            const config = configureCheckbox({onClick, selectedValues}),
+            const config = configureCheckbox({onChange, selectedValues}),
                   val = 'b';
 
-            CheckboxComponent.onClick(val, config);
+            CheckboxComponent.onChange(val, config);
 
             expect(updatedCheckbox!.selectedValues).to.deep.equal(['a', 'c']);
         });
@@ -84,12 +84,12 @@ describe('Checkbox/El', () => {
             it('a checkbox should be correctly configured', () => {
                 let updatedCheckbox:ICheckbox|null = null;
 
-                const onClick = (nC: ICheckbox) => updatedCheckbox = nC;
+                const onChange = (nC: ICheckbox) => updatedCheckbox = nC;
 
                 const config = configureCheckbox({
                     disabled: true,
                     name: 'New Name',
-                    onClick,
+                    onChange,
                     selectedValues: ['val1'],
                     values: [{label: 'Label A', value: 'val1'}, {label: 'Label b', value: 'val2'}],
                     wrapperClassName: 'Test Class Name'
@@ -108,7 +108,7 @@ describe('Checkbox/El', () => {
                 expect(props.name).to.equal(config.name);
                 expect(props.checked).to.equal(contains(config.values[index].value, config.selectedValues));
 
-                subject.simulate('click');
+                subject.simulate('change');
 
                 expect(updatedCheckbox!.selectedValues).to.deep.equal([]);
             });

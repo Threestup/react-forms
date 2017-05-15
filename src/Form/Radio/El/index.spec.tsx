@@ -23,29 +23,29 @@ describe('Radio/El', () => {
         sandbox.restore();
     });
 
-    describe('onClick', () => {
+    describe('onChange', () => {
         it('should change selectedValue to new value if the clecked value is not equal', () => {
             let updatedRadio:IRadio | null = null;
 
-            const onClick = (nR:IRadio) => updatedRadio = nR;
+            const onChange = (nR:IRadio) => updatedRadio = nR;
             const selectedValue = 'Tarte';
-            const config = configureRadio({ onClick, selectedValue });
+            const config = configureRadio({ onChange, selectedValue });
 
             const val = 'a';
-            RadioComponent.onClick(val, config);
+            RadioComponent.onChange(val, config);
 
             expect(updatedRadio!.selectedValue).to.equal(val);
         });
 
-        it('should change selectedValue to undefined if clicked value is the same', () => {
+        it('should change selectedValue to undefined if changed value is the same', () => {
             let updatedRadio:IRadio | null = null;
 
-            const onClick = (nR:IRadio) => updatedRadio = nR;
+            const onChange = (nR:IRadio) => updatedRadio = nR;
             const selectedValue = 'Pie';
-            const config = configureRadio({ onClick, selectedValue });
+            const config = configureRadio({ onChange, selectedValue });
 
             const val = 'Pie';
-            RadioComponent.onClick(val, config);
+            RadioComponent.onChange(val, config);
 
             expect(updatedRadio!.selectedValue).to.equal(undefined);
         });
@@ -82,12 +82,12 @@ describe('Radio/El', () => {
             it('a radio should be correctly configured', () => {
                 let updatedRadio:IRadio | null = null;
 
-                const onClick = (nR:IRadio) => updatedRadio = nR;
+                const onChange = (nR:IRadio) => updatedRadio = nR;
 
                 const config = configureRadio({
                     disabled: true,
                     name: 'New Name',
-                    onClick,
+                    onChange,
                     selectedValue: 'val1',
                     values: [{ label: 'Label A', value: 'val1' }, { label: 'Label b', value: 'val2' }],
                     wrapperClassName: 'Test Class Name'
@@ -106,7 +106,7 @@ describe('Radio/El', () => {
                 expect(props.name).to.equal(config.name);
                 expect(props.checked).to.equal(config.values[index].value === config.selectedValue);
 
-                subject.simulate('click');
+                subject.simulate('change');
 
                 expect(updatedRadio!.selectedValue).to.equal('val2');
             });

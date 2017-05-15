@@ -1,6 +1,6 @@
 import { contains, remove } from 'ramda';
 import * as React from 'react';
-import { ICheckbox } from '../index';
+import { ICheckbox, CheckboxValue } from '../index'
 import { appendToWrapperClass, Update } from '../../Utils';
 
 export interface IProps {
@@ -9,7 +9,7 @@ export interface IProps {
 
 export class CheckboxComponent extends React.Component<IProps, {}> {
 
-    static onClick(v: string, conf: ICheckbox) {
+    static onChange(v: string, conf: ICheckbox) {
         let newSelectedValues = [...conf.selectedValues];
 
         if (contains(v, newSelectedValues)) {
@@ -19,7 +19,7 @@ export class CheckboxComponent extends React.Component<IProps, {}> {
             newSelectedValues.push(v);
         }
 
-        conf.onClick(Update(conf, {selectedValues: newSelectedValues}));
+        conf.onChange(Update(conf, {selectedValues: newSelectedValues}));
     }
 
     render() {
@@ -27,13 +27,15 @@ export class CheckboxComponent extends React.Component<IProps, {}> {
 
         return (
             <ul className={appendToWrapperClass(config.wrapperClassName, 'checkbox')}>
-                {config.values.map(_ => (
+                {config.values.map((_: CheckboxValue, index: number ) => (
                   <li>
                       <input type="checkbox" disabled={config.disabled} id={_.value}
-                             onClick={e => CheckboxComponent.onClick(_.value, config)}
+                             onChange={e => CheckboxComponent.onChange(_.value, config)}
                              value={_.value}
                              name={config.name}
-                             checked={contains(_.value, config.selectedValues)}/>
+                             checked={contains(_.value, config.selectedValues)}
+                             key={index}
+                            />
 
                       <label htmlFor={_.value}>{_.label}</label>
                   </li>

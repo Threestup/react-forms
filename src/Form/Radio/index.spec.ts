@@ -8,7 +8,7 @@ describe('Radio', () => {
 
             expect(subject.disabled).to.equal(false);
             expect(subject.name).to.equal('');
-            expect(subject.onClick(configureRadio())).to.equal(null);
+            expect(subject.onChange(configureRadio())).to.equal(null);
             expect(subject.selectedValue).to.equal('');
             expect(subject.values).to.deep.equal([]);
             expect(subject.wrapperClassName).to.equal('');
@@ -17,13 +17,13 @@ describe('Radio', () => {
         it('returns correctly re-configured Radio when override object', () => {
             let newRadio:IRadio | null = null;
 
-            const onClick = (nR:IRadio) => newRadio = nR;
+            const onChange = (nR:IRadio) => newRadio = nR;
 
             // Could use IRadioPartial but want to ensure we test replacing every getConfig key
             const overrideConfig: IRadio = {
                 disabled: true,
                 name: 'New Name',
-                onClick,
+                onChange,
                 selectedValue: 'Other Value',
                 values: [{ label: 'New Label', value: 'newValue' }],
                 wrapperClassName: 'NewClassName'
@@ -35,12 +35,12 @@ describe('Radio', () => {
 
             expect(subject.disabled).to.equal(overrideConfig.disabled);
             expect(subject.name).to.equal(overrideConfig.name);
-            expect(subject.onClick).to.equal(overrideConfig.onClick);
+            expect(subject.onChange).to.equal(overrideConfig.onChange);
             expect(subject.selectedValue).to.equal(overrideConfig.selectedValue);
             expect(subject.values).to.deep.equal(overrideConfig.values);
             expect(subject.wrapperClassName).to.equal(overrideConfig.wrapperClassName);
 
-            subject.onClick(updatedRadio);
+            subject.onChange(updatedRadio);
             expect(newRadio).to.deep.equal(updatedRadio);
         });
     });
